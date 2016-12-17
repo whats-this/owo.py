@@ -8,12 +8,64 @@ __all__ = ["upload_files","shorten_urls","async_upload_files","async_shorten_url
 BASE_URL = "https://api.whats-th.is"
 IMAGE_PATH = "/upload/pomf"
 URL_PATH = "/shorten/polr"
+CONFIG_URL = "https://raw.githubusercontent.com/whats-this/api/master/config.json"
+
+def check_file(file):
+    try:
+        owo_config
+    except NameError:
+        import requests
+        response = requests.get(CONFIG_URL)
+        if response.status_code != 200:
+            raise ValueError("Expected 200, got {}\n{}".format(
+                response.status_code, response.text))
+
+        owo_config = response.json()
+
+    if mimetypes.guess_type(file) == "text/plain":
+        if file.split(".")[-1] not in owo_config.get("textPlainExtensions"):
+            raise ValueError("File extension {} not in allowed extensions.".format(
+                file.split(".")[-1]))
+
+    elif mimetypes.guess_type(file)[0] not in owo_config.get("allowedFileTypes"):
+        raise ValueError("File mimetype {} not in allowed mimetypes.".format(
+            mimetypes.guess_type(file)[0]))
+
+    return True
+
+async def async_check_file(file, loop):
+    try:
+        owo_config
+    except NameError:
+        import aiohttp
+        async with aiohttp.ClientSession(loop=loop) as session:
+            async with session.get(CONFIG_URL) as response:
+                if response.status_code != 200:
+                    raise ValueError("Expected 200, got {}\n{}".format(
+                        response.status_code, response.text))
+
+                global owo_config
+                owo_config = await response.json()
+
+    if mimetypes.guess_type(file)[0] == "text/plain":
+        if file.split(".")[-1] not in owo_config.get("textPlainExtensions"):
+            raise ValueError("File extension {} not in allowed extensions.".format(
+                file.split(".")[-1]))
+
+    elif mimetypes.guess_type(file)[0] not in owo_config.get("allowedFileTypes"):
+        raise ValueError("File mimetype {} not in allowed mimetypes.".format(
+            mimetypes.guess_type(file)[0]))
+
+    return True
 
 def upload_files(key:str, *files: str):
     try:
         import requests
     except ImportError:
-    raise ImportError("Please install the `requests` module to use this function")
+        raise ImportError("Please install the `requests` module to use this function")
+
+    for file in files:
+        check_file(file)
 
     multipart = [(
         "files[]",
@@ -61,6 +113,9 @@ async def async_upload_files(key:str, *files: str, loop=None):
         raise ImportError("Please install the `aiohttp` module to use this function")
 
     results = {}
+    
+    for file in files:
+        await async_check_file(file, loop)
 
     with aiohttp2.MultipartWriter('form-data') as mp:
         for file in files:
