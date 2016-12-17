@@ -2,62 +2,17 @@ import mimetypes
 import json
 import base64
 import io
+from functools import lru_cache
+
+from .checks import *
 
 __all__ = ["upload_files","shorten_urls","async_upload_files","async_shorten_urls","Client"]
 
 BASE_URL = "https://api.whats-th.is"
 IMAGE_PATH = "/upload/pomf"
 URL_PATH = "/shorten/polr"
-CONFIG_URL = "https://raw.githubusercontent.com/whats-this/api/master/config.json"
 
-def check_file(file):
-    try:
-        owo_config
-    except NameError:
-        import requests
-        response = requests.get(CONFIG_URL)
-        if response.status_code != 200:
-            raise ValueError("Expected 200, got {}\n{}".format(
-                response.status_code, response.text))
-
-        owo_config = response.json()
-
-    if mimetypes.guess_type(file) == "text/plain":
-        if file.split(".")[-1] not in owo_config.get("textPlainExtensions"):
-            raise ValueError("File extension {} not in allowed extensions.".format(
-                file.split(".")[-1]))
-
-    elif mimetypes.guess_type(file)[0] not in owo_config.get("allowedFileTypes"):
-        raise ValueError("File mimetype {} not in allowed mimetypes.".format(
-            mimetypes.guess_type(file)[0]))
-
-    return True
-
-async def async_check_file(file, loop):
-    try:
-        owo_config
-    except NameError:
-        import aiohttp
-        async with aiohttp.ClientSession(loop=loop) as session:
-            async with session.get(CONFIG_URL) as response:
-                if response.status_code != 200:
-                    raise ValueError("Expected 200, got {}\n{}".format(
-                        response.status_code, response.text))
-
-                global owo_config
-                owo_config = await response.json()
-
-    if mimetypes.guess_type(file)[0] == "text/plain":
-        if file.split(".")[-1] not in owo_config.get("textPlainExtensions"):
-            raise ValueError("File extension {} not in allowed extensions.".format(
-                file.split(".")[-1]))
-
-    elif mimetypes.guess_type(file)[0] not in owo_config.get("allowedFileTypes"):
-        raise ValueError("File mimetype {} not in allowed mimetypes.".format(
-            mimetypes.guess_type(file)[0]))
-
-    return True
-
+@lru_cache()
 def upload_files(key:str, *files: str):
     try:
         import requests
@@ -85,6 +40,7 @@ def upload_files(key:str, *files: str):
     return {item["name"]: "https://owo.whats-th.is/"+item["url"]
             for item in response.json()["files"]}
 
+@lru_cache()
 def shorten_urls(key:str, *urls:str):
     try:
         import requests
@@ -105,6 +61,7 @@ def shorten_urls(key:str, *urls:str):
 
     return results
 
+@lru_cache()
 async def async_upload_files(key:str, *files: str, loop=None):
     try:
         from . import aiohttp2
@@ -142,6 +99,7 @@ async def async_upload_files(key:str, *files: str, loop=None):
 
     return results
 
+@lru_cache()
 async def async_shorten_urls(key:str, *urls:str, loop=None):
     try:
         import aiohttp
