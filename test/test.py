@@ -5,7 +5,7 @@ key = input("Please enter your API key: ")
 res = owo.shorten_urls(key,"http://google.com")
 print(res)
 
-res = owo.upload_files(key, "test.png", "owo.py")
+res = owo.upload_files(key, "test.png")
 print(res)
 
 
