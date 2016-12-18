@@ -4,11 +4,9 @@ import base64
 import io
 from functools import lru_cache
 
-from .checks import *
-
 __all__ = ["upload_files","shorten_urls","async_upload_files","async_shorten_urls","Client"]
 
-BASE_URL = "https://api.whats-th.is"
+BASE_URL = "https://api.awau.moe"
 IMAGE_PATH = "/upload/pomf"
 URL_PATH = "/shorten/polr"
 
@@ -18,9 +16,6 @@ def upload_files(key:str, *files: str):
         import requests
     except ImportError:
         raise ImportError("Please install the `requests` module to use this function")
-
-    for file in files:
-        check_file(file)
 
     multipart = [(
         "files[]",
@@ -70,9 +65,6 @@ async def async_upload_files(key:str, *files: str, loop=None):
         raise ImportError("Please install the `aiohttp` module to use this function")
 
     results = {}
-    
-    for file in files:
-        await async_check_file(file, loop)
 
     with aiohttp2.MultipartWriter('form-data') as mp:
         for file in files:
