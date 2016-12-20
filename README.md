@@ -1,63 +1,52 @@
-# OwO.whats-th.is wrapper for python
+# owo.py
 
-Installation:
+A wrapper that was written inside of Python that allows for you to upload images to the owo.whats-th.is and shorten URLs through uwu.whats-th.is. Allows for both methods through Async and Non-Async. Currently only supported inside of Python 3 (3.5+ recommended).
 
-Step 1: Get an API key
-Step 2: `pip install http://github.com/whats-this/owo.py/archive/master.zip`
+# Instructions
 
+1. Gain a API key in order to be actually able to use the service.
+2. Run the command `pip install http://github.com/whats-this/owo.py/archive/master.zip`.
+3. Check the usage below to find some basic examples of how to use the script.
 
-Usage:
+# Usage
 
-```python
+Basic usage of the script is like so.
 
->>> import owo
->>> owo.shorten_urls(API_KEY, "url1","url2")
-["shortened url 1","shortened url 2"]
-
->>> owo.upload_files(API_KEY, "file.png", "file.py")
-{"file.png": "url", "file.py": "url"}
-
->>> import asyncio
->>> loop = asyncio.get_event_loop()
->>> loop.run_until_complete(
-...     owo.async_shorten_urls(API_KEY, "url1","url2", loop=loop)
-... )
-...
-["shortened url 1","shortened url 2"]
-
->>> loop.run_until_complete(
-...     owo.async_upload_files(API_KEY, "file.png", "file.py", loop=loop)
-... )
-...
-{"file.png": "url", "file.py": "url"}
-
-```
-
-If you don't want to pass around `api_key` and/or `loop`, use the `Client` class.
+**Image Uploading**
 
 ```python
-
->>> import owo
->>> my_client = owo.Client(API_KEY)
->>> my_client.shorten_urls("url1","url2")
-["shortened url 1","shortened url 2"]
-
->>> my_client.upload_files("file.png", "file.py")
-{"file.png": "url", "file.py": "url"}
-
->>> import asyncio
->>> loop = asyncio.get_event_loop()
->>> my_client = owo.Client(API_KEY, loop=loop)
->>> loop.run_until_complete(
-...     my_client.async_shorten_urls("url1","url2")
-... )
-...
-["shortened url 1","shortened url 2"]
-
->>> loop.run_until_complete(
-...     my_client.async_upload_files("file.png", "file.py")
-... )
-...
-{"file.png": "url", "file.py": "url"}
-
+import owo
+owo.upload_files(API_KEY, "file.png", "file.py")
 ```
+
+returns something like..
+
+```python
+{"file.png": "url", "file.py": "url"}
+```
+
+**URL Shortening**
+
+```python
+import owo
+owo.shorten_urls(API_KEY, "url1","url2")
+```
+
+returns something like..
+
+```python
+["shortened url 1","shortened url 2"]
+```
+
+For more powerful/better examples please check /examples/.
+
+# Contribute
+
+1. Fork repo.
+2. Edit code.
+3. Make a PR.
+4. Submit said PR.
+
+# License
+
+A copy of the MIT license can be found in `LICENSE.md`.
