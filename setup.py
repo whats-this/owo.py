@@ -9,9 +9,9 @@ with open('README.md') as f:
 setup(
     name='owo',
 
-    version='1.0.1',
+    version='1.0.2',
 
-    description='Python API wrapper for api.whats-th.is',
+    description='Python API wrapper for api.awau.moe',
     long_description=long_description,
 
     url='https://github.com/whats-this/owo.py',

@@ -16,6 +16,15 @@
 
 >>> my_client.upload_files("file.png", "file.py")
 
+# The client also stores verbosity (default: False), which can be toggled using
+# Client.toggle_verbose()
+# Verbosity should be given using a kwarg to __init__, i.e.
+
+>>> my_client = owo.Client(API_KEY, verbose=True)
+>>> my_client.toggle_verbose()
+>>> my_client.verbose
+False
+
 # ############################################################
 
 # NON ASYNCHRONOUS EXAMPLES
@@ -34,6 +43,18 @@
 # ############## #
 
 {"file.png": "url", "file.py": "url"}	
+
+# It is also possible to toggle verbosity
+>>> owo.upload_files(API_KEY, "file.png", "file.py", verbose=True)
+
+# ############## #
+# EXAMPLE OUTPUT #
+# ############## #
+
+{
+	'file.png': {'base domain 1': 'url 1', 'base domain 2': 'other url 1'},
+	"file.py": {'base domain 1': 'url 2', 'base domain 2': 'other url 2'}
+}
 
 # ############################################################
 
