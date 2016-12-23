@@ -13,7 +13,7 @@ IMAGE_PATH = "/upload/pomf"
 URL_PATH = "/shorten/polr"
 UPLOAD_STANDARD = "https://owo.whats-th.is/"
 SHORTEN_STANDARD = "https://uwu.whats-th.is/"
-UPLOAD_BASES = ("https://owo.whats-th.is/","https://i.am-a.ninja/","https://buttsare.sexy/","https://nyanyanya.moe/","https://owo.foxgirlsare.sexy/","https://i.stole-a-me.me/")
+UPLOAD_BASES = ("https://owo.whats-th.is/","https://i.am-a.ninja/","https://buttsare.sexy/","https://nyanyanya.moe/","https://all.foxgirlsare.sexy/","https://i.stole-a-me.me/","https://can-i-ask-dean-on-a.date/")
 SHORTEN_BASES = ("https://awau.moe/","https://uwu.whats-th.is/")
 
 def check_size(file):
