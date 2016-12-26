@@ -16,8 +16,6 @@
 
 >>> my_client.shorten_urls("url1","url2")
 
-<<<<<<< HEAD
-=======
 # The client also stores verbosity (default: False), which can be toggled using
 # Client.toggle_verbose()
 # Verbosity should be given using a kwarg to __init__, i.e.
@@ -27,7 +25,6 @@
 >>> my_client.verbose
 False
 
->>>>>>> origin/master
 # ############################################################
 
 # NON ASYNCHRONOUS EXAMPLES
@@ -47,8 +44,6 @@ False
 
 ["shortened url 1","shortened url 2"]
 
-<<<<<<< HEAD
-=======
 # It is also possible to toggle verbosity
 >>> owo.shorten_urls(API_KEY, "url1","url2", verbose=True)
 
@@ -61,7 +56,6 @@ False
 	{'base domain 1': 'shortened url 2', 'base domain 2': 'other shortened url 2'}
 ]
 
->>>>>>> origin/master
 # ############################################################
 
 # ASYNCHRONOUS EXAMPLES
