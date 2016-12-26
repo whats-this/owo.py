@@ -2,6 +2,8 @@ import mimetypes
 import json
 import base64
 import io
+import os.path
+
 from functools import lru_cache
 
 __all__ = ["upload_files","shorten_urls","async_upload_files","async_shorten_urls","Client"]
@@ -9,13 +11,24 @@ __all__ = ["upload_files","shorten_urls","async_upload_files","async_shorten_url
 BASE_URL = "https://api.awau.moe"
 IMAGE_PATH = "/upload/pomf"
 URL_PATH = "/shorten/polr"
+UPLOAD_STANDARD = "https://owo.whats-th.is/"
+SHORTEN_STANDARD = "https://uwu.whats-th.is/"
+UPLOAD_BASES = ("https://owo.whats-th.is/","https://i.am-a.ninja/","https://buttsare.sexy/","https://nyanyanya.moe/","https://all.foxgirlsare.sexy/","https://i.stole-a-me.me/","https://can-i-ask-dean-on-a.date/")
+SHORTEN_BASES = ("https://awau.moe/","https://uwu.whats-th.is/")
+
+def check_size(file):
+    if os.path.getsize(file) > 83886080:
+        raise OverflowError("File exceeds file size limit")
 
 @lru_cache()
-def upload_files(key:str, *files: str):
+def upload_files(key:str, *files: str, verbose=False):
     try:
         import requests
     except ImportError:
         raise ImportError("Please install the `requests` module to use this function")
+
+    for file in files:
+        check_size(file)
 
     multipart = [(
         "files[]",
@@ -32,11 +45,25 @@ def upload_files(key:str, *files: str):
         raise ValueError("Expected 200, got {}\n{}".format(
             response.status_code, response.text))
 
-    return {item["name"]: "https://owo.whats-th.is/"+item["url"]
-            for item in response.json()["files"]}
+    if verbose:
+        results = {
+            item["name"]: {
+                base: base+item["url"] 
+                for base in UPLOAD_BASES
+            }
+            for item in response.json()["files"]
+        }
+
+    else:
+        results = {
+            item["name"]: UPLOAD_STANDARD + item["url"]
+            for item in response.json()["files"]
+        }
+
+    return results
 
 @lru_cache()
-def shorten_urls(key:str, *urls:str):
+def shorten_urls(key:str, *urls:str, verbose=False):
     try:
         import requests
     except ImportError:
@@ -48,16 +75,23 @@ def shorten_urls(key:str, *urls:str):
     for url in urls:
         response = requests.get(BASE_URL+URL_PATH, params={"action":"shorten","url":url, "key":key})
 
-    if response.status_code != 200:
-        raise ValueError("Expected 200, got {}\n{}".format(
-            response.status_code, response.text))
+        if response.status_code != 200:
+            raise ValueError("Expected 200, got {}\n{}".format(
+                response.status_code, response.text))
 
-    results.append(response.text)
+        path = response.text.split("/")[-1]
+        if verbose:
+            results.append({
+                base: base+path
+                for base in SHORTEN_BASES
+            })
+        else:
+            results.append(SHORTEN_STANDARD + path)
 
     return results
 
 @lru_cache()
-async def async_upload_files(key:str, *files: str, loop=None):
+async def async_upload_files(key:str, *files: str, loop=None, verbose=False):
     try:
         from . import aiohttp2
         import aiohttp
@@ -65,6 +99,9 @@ async def async_upload_files(key:str, *files: str, loop=None):
         raise ImportError("Please install the `aiohttp` module to use this function")
 
     results = {}
+
+    for file in files:
+        check_size(file)
 
     with aiohttp2.MultipartWriter('form-data') as mp:
         for file in files:
@@ -87,12 +124,19 @@ async def async_upload_files(key:str, *files: str, loop=None):
                         raise ValueError("Expected 200, got {}\n{}".format(
                             item["errorcode"], item["description"]))
 
-                    results[item["name"]] = "https://owo.whats-th.is/"+item["url"]
+                    if verbose:
+                        results[item["name"]] = {
+                            base: base+item["url"] 
+                            for base in UPLOAD_BASES
+                        }
+
+                    else:
+                        results[item["name"]] = UPLOAD_STANDARD+item["url"]
 
     return results
 
 @lru_cache()
-async def async_shorten_urls(key:str, *urls:str, loop=None):
+async def async_shorten_urls(key:str, *urls:str, loop=None, verbose=False):
     try:
         import aiohttp
     except ImportError:
@@ -107,7 +151,14 @@ async def async_shorten_urls(key:str, *urls:str, loop=None):
                     raise ValueError("Expected 200, got {}\n{}".format(
                         response.status, await response.text()))
 
-            results.append(await response.text())
+            path = (await response.text()).split("/")[-1]
+            if verbose:
+                results.append({
+                    base: base+path
+                    for base in SHORTEN_BASES
+                })
+            else:
+                results.append(SHORTEN_STANDARD + path)
 
     return results
 
@@ -117,18 +168,22 @@ class Client:
     without constantly passing `api_key` and/or `loop`
     """
 
-    def __init__(self, api_key:str, loop=None):
+    def __init__(self, api_key:str, loop=None, verbose=False):
         self.key = api_key
         self.loop = loop
+        self.verbose = verbose
+        
+    def toggle_verbose(self):
+        self.verbose = not self.verbose
 
     def upload_files(self, *files: str):
-        return upload_files(self.key, *files)
+        return upload_files(self.key, *files, verbose=self.verbose)
 
     def shorten_urls(self, *urls: str):
-        return shorten_urls(self.key, *urls)
+        return shorten_urls(self.key, *urls, verbose=self.verbose)
 
     async def async_upload_files(self, *files: str):
-        return async_upload_files(self.key, *files, loop=self.loop)
+        return async_upload_files(self.key, *files, loop=self.loop, verbose=self.verbose)
 
     async def async_shorten_urls(self, *urls: str):
-        return async_shorten_urls(self.key, *urls, loop=self.loop)
+        return async_shorten_urls(self.key, *urls, loop=self.loop, verbose=self.verbose)
