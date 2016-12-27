@@ -1,13 +1,14 @@
-#  _____ __ _____   _ __ _  _ 
+#  _____ __ _____   _ __ _  _
 # / _ \ V  V / _ \_| '_ \ || |
 # \___/\_/\_/\___(_) .__/\_, |
-#                  |_|   |__/ 
+#                  |_|   |__/
 #
-# UPLOAD EXAMPLES 
+# UPLOAD EXAMPLES
 
 # ############################################################
 
-# If you don't want to pass your key each time define it within the Client class.
+# If you don't want to pass your key each time,
+# define it within the Client class.
 
 >>> import owo
 >>> my_client = owo.Client(API_KEY)
@@ -42,7 +43,7 @@ False
 # EXAMPLE OUTPUT #
 # ############## #
 
-{"file.png": "url", "file.py": "url"}	
+{"file.png": "url", "file.py": "url"}
 
 # It is also possible to toggle verbosity
 >>> owo.upload_files(API_KEY, "file.png", "file.py", verbose=True)
@@ -52,8 +53,8 @@ False
 # ############## #
 
 {
-	'file.png': {'base domain 1': 'url 1', 'base domain 2': 'other url 1'},
-	"file.py": {'base domain 1': 'url 2', 'base domain 2': 'other url 2'}
+    'file.png': {'base domain 1': 'url 1', 'base domain 2': 'other url 1'},
+    'file.py': {'base domain 1': 'url 2', 'base domain 2': 'other url 2'}
 }
 
 # ############################################################
@@ -65,8 +66,7 @@ False
 # ############# #
 
 >>> loop.run_until_complete(
-...     owo.async_upload_files(API_KEY, "file.png", "file.py", loop=loop)
-... )
+...     owo.async_upload_files(API_KEY, "file.png", "file.py", loop=loop))
 ...
 
 # ############## #

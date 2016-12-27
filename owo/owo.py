@@ -9,8 +9,8 @@ __all__ = ["upload_files", "shorten_urls",
 
 BASE_URL = "https://api.awau.moe"
 
-IMAGE_PATH = "/upload/pomf"
-URL_PATH = "/shorten/polr"
+UPLOAD_PATH = "/upload/pomf"
+SHORTEN_PATH = "/shorten/polr"
 
 UPLOAD_STANDARD = "https://owo.whats-th.is/"
 SHORTEN_STANDARD = "https://uwu.whats-th.is/"
@@ -19,7 +19,6 @@ UPLOAD_BASES = ("https://owo.whats-th.is/", "https://i.am-a.ninja/",
                 "https://buttsare.sexy/", "https://nyanyanya.moe/",
                 "https://all.foxgirlsare.sexy/", "https://i.stole-a-me.me/",
                 "https://can-i-ask-dean-on-a.date/")
-
 
 SHORTEN_BASES = ("https://awau.moe/", "https://uwu.whats-th.is/")
 
@@ -49,7 +48,7 @@ def upload_files(key: str, *files: str, verbose=False):
         ))
         for file in files]
 
-    response = requests.post(BASE_URL+IMAGE_PATH, files=multipart,
+    response = requests.post(BASE_URL+UPLOAD_PATH, files=multipart,
                              params={"key": key})
 
     if response.status_code != 200:
@@ -86,7 +85,7 @@ def shorten_urls(key: str, *urls: str, verbose=False):
     results = []
 
     for url in urls:
-        response = requests.get(BASE_URL+URL_PATH,
+        response = requests.get(BASE_URL+SHORTEN_PATH,
                                 params={"action": "shorten",
                                         "url": url,
                                         "key": key})
@@ -132,7 +131,7 @@ async def async_upload_files(key: str, *files: str, loop=None, verbose=False):
             )
 
         async with aiohttp.ClientSession(loop=loop) as session:
-            async with session.post(BASE_URL+IMAGE_PATH, data=mp,
+            async with session.post(BASE_URL+UPLOAD_PATH, data=mp,
                                     params={"key": key}) as response:
                 if response.status != 200:
                     raise ValueError("Expected 200, got {}\n{}".format(
@@ -167,7 +166,7 @@ async def async_shorten_urls(key: str, *urls: str, loop=None, verbose=False):
 
     async with aiohttp.ClientSession(loop=loop) as session:
         for url in urls:
-            async with session.get(BASE_URL+URL_PATH,
+            async with session.get(BASE_URL+SHORTEN_PATH,
                                    params={"action": "shorten",
                                            "url": url,
                                            "key": key}) as response:
