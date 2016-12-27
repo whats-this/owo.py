@@ -6,7 +6,6 @@ from aiohttp.multipart import TOKEN
 from aiohttp.hdrs import CONTENT_DISPOSITION
 from urllib.parse import quote
 
-import asyncio
 import aiohttp
 
 

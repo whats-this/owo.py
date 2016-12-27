@@ -1,7 +1,4 @@
 import mimetypes
-import json
-import base64
-import io
 import os.path
 
 from functools import lru_cache
