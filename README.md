@@ -15,7 +15,7 @@ Either install using your device's app store or by running `$ apt install termux
 
 The background monitor watches for new files in a directory (usually a screenshots folder) and uploads those new files.
 
-The program acceps several command-line flags.
+The program accepts several command-line flags.
 
 ```
 $ python ./bg.py --help
