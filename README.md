@@ -8,6 +8,35 @@ A wrapper that was written inside of Python that allows for you to upload images
 2. Run the command `pip install http://github.com/whats-this/owo.py/archive/master.zip`.
 3. Check the usage below to find some basic examples of how to use the script.
 
+### Mobile Devices
+
+For use on Android devices using [Termux](https://termux.com/), the Termux:API package is required to use the background monitor.
+Either install using your device's app store or by running `$ apt install termux-api`
+
+The background monitor watches for new files in a directory (usually a screenshots folder) and uploads those new files.
+
+The program acceps several command-line flags.
+
+```
+$ python ./bg.py --help
+usage: bg.py [-h] [-p PATH] -k KEY [-u URL]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -p PATH, --path PATH  Path to check file updates
+  -k KEY, --key KEY     API Key
+  -u URL, --url URL     Base vanity url to use
+```
+
+The base url can be any of the owo.whats-th.is vanity urls.
+
+**Example Use**
+
+`$ python ./bg.py -p "/storage/Pictures/Screenshots" -k "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" -u "https://i.am-a.ninja/"`
+
+This starts a background task monitoring `/storage/Pictures/Screenshots/` for new files, uploads those files and returns the link, using the vanity url [https://i.am-a.ninja/](https://i.am-a.ninja/)
+
+
 # Usage
 
 Basic usage of the script is like so.
@@ -37,6 +66,7 @@ returns something like..
 ```python
 ["shortened url 1","shortened url 2"]
 ```
+
 
 For more powerful/better examples please check /examples/.
 

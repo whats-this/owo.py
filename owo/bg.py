@@ -8,48 +8,74 @@ import argparse
 import owo
 import os
 import sys
-import subprocess
+import time
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-p", "--path", help="Path to check file updates",
-                        default="/sdcard/pictures/screenshots")
-    parser.add_argument("-k", "--key", help="API Key", required=True)
+from watchdog.observers.polling import PollingObserverVFS
 
-    args = parser.parse_args()
+from watchdog.events import FileSystemEventHandler
 
-    files_sent = [f for f in os.listdir() if os.path.isfile(f)]  # Only send new files
+parser = argparse.ArgumentParser()
+parser.add_argument("-p", "--path", help="Path to check file updates",
+                    default="/sdcard/pictures/screenshots")
 
-    print("Starting background task...")
+parser.add_argument("-k", "--key", help="API Key", required=True)
 
-    while True:
-        for file in [f for f in os.listdir() if os.path.isfile(f) and f not in files_sent]:
+parser.add_argument("-u", "--url", help="Base vanity url to use",
+                    default="https://owo.whats-thi.is/")
 
-            if file not in files_sent:
+args = parser.parse_args()
+
+
+class FileWatcher(FileSystemEventHandler):
+    def on_created(self, event):
+        if not event.is_directory:
+            if event.event_type == "created":
                 try:
-                    url = owo.upload_files(args.key, file)[0]
+                    urls = list(owo.upload_files(args.key, event.src_path,
+                                verbose=True).values())[0]
+
+                    try:
+                        url = urls[args.url]
+                    except KeyError as e:
+                        print("Vanity url base {} was not found, using default"
+                              .format(e))
+                        url = urls["https://owo.whats-th.is/"]
 
                 except ValueError as e:
                     print("Upload failed:\n{}".format(e.args[0]))
 
                 except OverflowError:
-                    print("File too big: {}".format(file))
-                    files_sent.append(file)
+                    print("File too big: {}".format(event.src_path))
 
                 else:
-                    files_sent.append(file)
                     if (sys.executable ==
                             "/data/data/com.termux/files/usr/bin/python"):
                         # Mobile devices
 
                         try:
-                            subprocess.run("termux-notification -t File uploaded, "
-                                           "link copied to clipboard\n"
-                                           "-c {} -u {}".format(file, url)
-                                                        .split(), shell=True)
-                            subprocess.run("termux-clipboard-set {}".format(url)
-                                           .split(), shell=True)
+                            os.system("termux-notification -t \""
+                                      "File uploaded, "
+                                      "link copied to clipboard\""
+                                      " -c \"{}\" -u \"{}\"".format(
+                                        event.src_path, url))
+
+                            os.system("termux-clipboard-set {}".format(url))
                         except:
-                            print("File uploaded: {}, URL: {}".format(file, url))
+                            print("File uploaded: {}, URL: {}".format(
+                                event.src_path, url))
                     else:
-                        print("File uploaded: {}, URL: {}".format(file, url))
+                        print("File uploaded: {}, URL: {}".format(
+                            event.src_path, url))
+
+
+if __name__ == "__main__":
+    observer = PollingObserverVFS(os.stat, os.listdir, .5)
+    observer.schedule(FileWatcher(), path=args.path)
+    observer.start()
+
+    try:
+        while True:
+            time.sleep(1)
+
+    except KeyboardInterrupt:
+        observer.stop()

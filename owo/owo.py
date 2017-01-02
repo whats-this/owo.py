@@ -83,7 +83,7 @@ def shorten_urls(key: str, *urls: str, verbose=False):
         import requests
     except ImportError:
         raise ImportError("Please install the `requests` module "
-                          "to use this functio*n")
+                          "to use this function")
 
     # Make the request
     results = []
