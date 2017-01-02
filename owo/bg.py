@@ -1,3 +1,5 @@
+#!/usr/bin/env python3.5
+
 """
 owo.py background process
 main use intended for mobile devices
@@ -21,7 +23,7 @@ parser.add_argument("-p", "--path", help="Path to check file updates",
 parser.add_argument("-k", "--key", help="API Key", required=True)
 
 parser.add_argument("-u", "--url", help="Base vanity url to use",
-                    default="https://owo.whats-thi.is/")
+                    default="https://owo.whats-th.is/")
 
 args = parser.parse_args()
 

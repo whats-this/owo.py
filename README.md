@@ -11,14 +11,23 @@ A wrapper that was written inside of Python that allows for you to upload images
 ### Mobile Devices
 
 For use on Android devices using [Termux](https://termux.com/), the Termux:API package is required to use the background monitor.
-Either install using your device's app store or by running `$ apt install termux-api`
+You will need to install using your device's app store AND by running `$ apt install termux-api`
+This method also requires `watchdog`, which is required to check for screenshots.
+It can be installed using `pip install watchdog`
+
+Last but not least, it is REQUIRED to do the following, or it will not work!
+
+```bash
+$ termux-fix-shebang /data/data/com.termux/files/usr/bin/owo-bg
+$ termux-fix-shebang /data/data/com.termux/files/usr/bin/owo-cli
+```
 
 The background monitor watches for new files in a directory (usually a screenshots folder) and uploads those new files.
 
 The program accepts several command-line flags.
 
 ```
-$ python ./bg.py --help
+$ owo-bg --help
 usage: bg.py [-h] [-p PATH] -k KEY [-u URL]
 
 optional arguments:
@@ -32,7 +41,7 @@ The base url can be any of the owo.whats-th.is vanity urls.
 
 **Example Use**
 
-`$ python ./bg.py -p "/storage/Pictures/Screenshots" -k "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" -u "https://i.am-a.ninja/"`
+`$ owo-bg -p "/storage/Pictures/Screenshots" -k "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" -u "https://i.am-a.ninja/"`
 
 This starts a background task monitoring `/storage/Pictures/Screenshots/` for new files, uploads those files and returns the link, using the vanity url [https://i.am-a.ninja/](https://i.am-a.ninja/)
 
