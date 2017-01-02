@@ -11,7 +11,7 @@ A wrapper that was written inside of Python that allows for you to upload images
 ### Mobile Devices
 
 For use on Android devices using [Termux](https://termux.com/), the Termux:API package is required to use the background monitor.
-You will need to install using your device's app store AND by running `$ apt install termux-api`
+You will need to install using your device's app store AND by running `$ apt install termux-tools termux-api`
 This method also requires `watchdog`, which is required to check for screenshots.
 It can be installed using `pip install watchdog`
 
@@ -19,7 +19,7 @@ Last but not least, it is REQUIRED to do the following, or it will not work!
 
 ```bash
 $ termux-fix-shebang /data/data/com.termux/files/usr/bin/owo-bg
-$ termux-fix-shebang /data/data/com.termux/files/usr/bin/owo-cli
+$ termux-fix-shebang /data/data/com.termux/files/usr/bin/owo
 ```
 
 The background monitor watches for new files in a directory (usually a screenshots folder) and uploads those new files.
