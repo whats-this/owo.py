@@ -30,6 +30,8 @@ setup(
     ],
     install_requires=[],
     packages=find_packages(),
-	scripts=["owo/owo-cli", "owo/owo-bg"],
+	entry_points = {
+        'console_scripts': ['owo=owo.cli:main', 'owo-bg=owo.bg:main'],
+    },
     keywords='api wrapper owo',
 )
