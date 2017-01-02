@@ -22,7 +22,7 @@ UPLOAD_BASES = ("https://owo.whats-th.is/", "https://i.am-a.ninja/",
                 "https://buttsare.sexy/", "https://nyanyanya.moe/",
                 "https://all.foxgirlsare.sexy/", "https://i.stole-a-me.me/",
                 "https://can-i-ask-dean-on-a.date/", "https://this.is-a.dog/",
-				"https://deanis.sexy/")
+                "https://deanis.sexy/")
 
 SHORTEN_BASES = ("https://awau.moe/", "https://uwu.whats-th.is/")
 

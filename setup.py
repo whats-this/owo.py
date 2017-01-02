@@ -30,5 +30,6 @@ setup(
     ],
     install_requires=[],
     packages=find_packages(),
+	scripts=["owo/owo-cli", "owo/owo-bg"],
     keywords='api wrapper owo',
 )
