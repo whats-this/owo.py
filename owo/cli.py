@@ -3,6 +3,7 @@
 import argparse
 import owo
 
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("key", help="Your API key")

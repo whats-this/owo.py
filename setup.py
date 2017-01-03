@@ -9,7 +9,7 @@ with open('README.md') as f:
 setup(
     name='owo',
 
-    version='1.1.2',
+    version='1.1.3',
 
     description='Python API wrapper for api.awau.moe',
     long_description=long_description,
@@ -30,8 +30,9 @@ setup(
     ],
     install_requires=[],
     packages=find_packages(),
+
     entry_points = {
-        'console_scripts': ['owo=owo.cli:main', 'owo-bg=owo.bg:main'],
+        'console_scripts': ['owo=owo.cli', 'owo-bg=owo.bg', 'owo-fix=owo.fix-termux'],
     },
     keywords='api wrapper owo',
 )

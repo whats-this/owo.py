@@ -12,10 +12,6 @@ import os
 import sys
 import time
 
-from watchdog.observers.polling import PollingObserverVFS
-
-from watchdog.events import FileSystemEventHandler
-
 parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--path", help="Path to check file updates",
                     default="/sdcard/pictures/screenshots/")
@@ -26,9 +22,9 @@ parser.add_argument("-u", "--url", help="Base vanity url to use",
                     default="https://owo.whats-th.is/")
 
 args = parser.parse_args()
-                
 
 sent_files = os.listdir(args.path)
+
 
 def main():
     if not args.path.endswith("/"):
@@ -37,18 +33,19 @@ def main():
     print("Starting backgroud process...")
     while True:
         time.sleep(2)
-        new_files = [f for f in os.listdir(args.path) if f not in sent_files and os.path.isfile(args.path+f)]
+        new_files = [f for f in os.listdir(args.path) if
+                     f not in sent_files and os.path.isfile(args.path+f)]
         if new_files == []:
             continue
         for file in new_files:
             try:
                 urls = list(owo.upload_files(args.key, args.path+file,
-                                verbose=True).values())[0]
+                                             verbose=True).values())[0]
 
                 url = urls.get(args.url)
                 if url is None:
                     print("Vanity url base {} was not found, using default"
-                          .format(e))
+                          .format(args.url))
                     url = urls["https://owo.whats-th.is/"]
 
             except ValueError as e:
