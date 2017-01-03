@@ -25,3 +25,7 @@ def main():
 
     else:
         parser.error("Either --upload or --shorten should be given")
+
+
+if __name__ == '__main__':
+    main()

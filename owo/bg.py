@@ -70,7 +70,7 @@ class FileWatcher(FileSystemEventHandler):
                             event.src_path, url))
 
 
-if __name__ == "__main__":
+def main():
     observer = PollingObserverVFS(os.stat, os.listdir, .5)
     observer.schedule(FileWatcher(), path=args.path)
     observer.start()
@@ -81,3 +81,7 @@ if __name__ == "__main__":
 
     except KeyboardInterrupt:
         observer.stop()
+
+
+if __name__ == "__main__":
+    main()
