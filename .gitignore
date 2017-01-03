@@ -2,3 +2,6 @@ __pycache__/*
 */__pycache__/*
 *.pyc
 .pypirc
+build/*
+dist/*
+owo.egg-info/*

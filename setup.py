@@ -9,7 +9,7 @@ with open('README.md') as f:
 setup(
     name='owo',
 
-    version='1.1.3',
+    version='1.1.4',
 
     description='Python API wrapper for api.awau.moe',
     long_description=long_description,
@@ -22,17 +22,18 @@ setup(
     license='MIT',
 
     classifiers=[
-        'Development Status :: 5 - Stable',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
-        'Topic :: Software Development :: API Wrapper',
-        'License :: OSI Approved :: MIT',
-        'Programming Language :: Python :: 3.5+',
+        'Topic :: Communications :: File Sharing',
+        'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python :: 3.5',
     ],
     install_requires=[],
     packages=find_packages(),
 
     entry_points = {
-        'console_scripts': ['owo=owo.cli', 'owo-bg=owo.bg', 'owo-fix=owo.fix-termux'],
+        'console_scripts': ['owo=owo.cli:main', 'owo-bg=owo.bg:main', 
+                            'owo-fix=owo.fix_termux:main'],
     },
     keywords='api wrapper owo',
 )
