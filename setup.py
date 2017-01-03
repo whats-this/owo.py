@@ -9,7 +9,7 @@ with open('README.md') as f:
 setup(
     name='owo',
 
-    version='1.1.4',
+    version='1.1.5',
 
     description='Python API wrapper for api.awau.moe',
     long_description=long_description,

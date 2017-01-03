@@ -12,14 +12,21 @@ import os
 import sys
 import time
 
+def print_v(text):
+    if args.verbose:
+        print(text)
+
 parser = argparse.ArgumentParser()
+parser.add_argument("-k", "--key", help="API Key", required=True)
+
 parser.add_argument("-p", "--path", help="Path to check file updates",
                     default="/sdcard/pictures/screenshots/")
 
-parser.add_argument("-k", "--key", help="API Key", required=True)
-
 parser.add_argument("-u", "--url", help="Base vanity url to use",
                     default="https://owo.whats-th.is/")
+
+parser.add_argument("-v", "--verbose", help="Increase output verbosity",
+                    action="store_true")
 
 args = parser.parse_args()
 
@@ -30,7 +37,7 @@ def main():
     if not args.path.endswith("/"):
         args.path += "/"
 
-    print("Starting backgroud process...")
+    print("Starting background process...")
     while True:
         time.sleep(2)
         new_files = [f for f in os.listdir(args.path) if
@@ -38,6 +45,7 @@ def main():
         if new_files == []:
             continue
         for file in new_files:
+            print_v("Found file: {}".format(file))
             try:
                 urls = list(owo.upload_files(args.key, args.path+file,
                                              verbose=True).values())[0]
@@ -56,6 +64,7 @@ def main():
                 sent_files.append(file)
 
             else:
+                print_v("Upload successful.")
                 sent_files.append(file)
                 if (sys.executable ==
                         "/data/data/com.termux/files/usr/bin/python"):
@@ -68,6 +77,7 @@ def main():
                                       url))
 
                         os.system("termux-clipboard-set {}".format(url))
+                        print_v("Sent notification")
                     except:
                         print("File uploaded: {}, URL: {}".format(
                                   file, url))
