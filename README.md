@@ -5,7 +5,7 @@ A wrapper that was written inside of Python that allows for you to upload images
 # Instructions
 
 1. Gain a API key in order to be actually able to use the service.
-2. Run the command `pip install http://github.com/whats-this/owo.py/archive/master.zip`.
+2. Run the command `pip install owo`.
 3. Check the usage below to find some basic examples of how to use the script.
 
 ### Mobile Devices
@@ -14,11 +14,10 @@ For use on Android devices using [Termux](https://termux.com/), the Termux:API p
 You will need to install using your device's app store AND by running `$ apt install termux-tools termux-api`
 
 
-**It is also REQUIRED to do the following, or it will not work!**
+**It is also REQUIRED to do the following after installing, or it will not work!**
 
 ```bash
-$ termux-fix-shebang /data/data/com.termux/files/usr/bin/owo-bg
-$ termux-fix-shebang /data/data/com.termux/files/usr/bin/owo
+$ owo-fix
 ```
 
 The background monitor watches for new files in a directory (usually a screenshots folder) and uploads those new files.
