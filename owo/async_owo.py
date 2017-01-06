@@ -5,6 +5,7 @@ from .utils import check_size, BASE_URL, MAX_FILES,\
     UPLOAD_PATH, SHORTEN_PATH, UPLOAD_STANDARD,\
     SHORTEN_STANDARD, UPLOAD_BASES, SHORTEN_BASES
 
+
 @lru_cache()
 @asyncio.coroutine
 def async_upload_files(key, *files, **kwargs):
@@ -13,7 +14,6 @@ def async_upload_files(key, *files, **kwargs):
     if len(files) > MAX_FILES:
         raise OverflowError("Maximum amout of files to send at once"
                             "is {}".format(MAX_FILES))
-
 
     try:
         from . import aiohttp2
@@ -24,7 +24,6 @@ def async_upload_files(key, *files, **kwargs):
 
     results = {}
 
-    
     for file in files:
         check_size(file)
 
@@ -62,6 +61,7 @@ def async_upload_files(key, *files, **kwargs):
 
     return results
 
+
 @lru_cache()
 @asyncio.coroutine
 def async_shorten_urls(key, *urls, **kwargs):
@@ -79,9 +79,9 @@ def async_shorten_urls(key, *urls, **kwargs):
         for url in urls:
             with (
                 yield from session.get(BASE_URL+SHORTEN_PATH,
-                                           params={"action": "shorten",
-                                                   "url": url,
-                                                   "key": key})) as response:
+                                       params={"action": "shorten",
+                                               "url": url,
+                                               "key": key})) as response:
                 if response.status != 200:
                     raise ValueError("Expected 200, got {}\n{}".format(
                         response.status, (yield from response.text())))
@@ -97,13 +97,14 @@ def async_shorten_urls(key, *urls, **kwargs):
 
     return results
 
+
 class Client:
     @asyncio.coroutine
     def async_upload_files(self, *files):
         return async_upload_files(self.key, *files,
-                                      loop=self.loop, verbose=self.verbose)
+                                  loop=self.loop, verbose=self.verbose)
 
     @asyncio.coroutine
     def async_shorten_urls(self, *urls):
         return async_shorten_urls(self.key, *urls,
-                                      loop=self.loop, verbose=self.verbose)
+                                  loop=self.loop, verbose=self.verbose)

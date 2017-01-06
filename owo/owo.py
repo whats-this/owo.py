@@ -6,6 +6,7 @@ try:
 except ImportError:
     # python 2 doesnt have lru_cache
     # Create a dummy wrapper instead
+
     def lru_cache():
         def wrapper(func):
             def inner(*args, **kwargs):
@@ -26,6 +27,7 @@ if PY_VERSION == 3:
 else:
     __all__ = ["upload_files", "shorten_urls",
                "Client"]
+
 
 @lru_cache()
 def upload_files(key, *files, **kwargs):
@@ -130,6 +132,7 @@ class Client:
 
     def shorten_urls(self, *urls):
         return shorten_urls(self.key, *urls, verbose=self.verbose)
+
 
 if PY_VERSION == 3:
     from . import async_owo

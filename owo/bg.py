@@ -12,9 +12,11 @@ import os
 import sys
 import time
 
+
 def print_v(text):
     if args.verbose:
         print(text)
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-k", "--key", help="API Key", required=True)
