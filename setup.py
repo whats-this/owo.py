@@ -9,7 +9,7 @@ with open('README.md') as f:
 setup(
     name='owo',
 
-    version='1.1.5',
+    version='2.0.0',
 
     description='Python API wrapper for api.awau.moe',
     long_description=long_description,
@@ -26,6 +26,7 @@ setup(
         'Intended Audience :: Developers',
         'Topic :: Communications :: File Sharing',
         'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 3.5',
     ],
     install_requires=[],
