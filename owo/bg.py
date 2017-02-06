@@ -11,6 +11,7 @@ import owo
 import os
 import sys
 import time
+import shlex
 import subprocess
 
 
@@ -75,21 +76,25 @@ def main():
 
                     try:
 						# os.system won't raise an error
-                        subprocess.run((
-							"termux-notification "
-							'--title "File uploaded" '
-                            '--content "{0}" '
-							'--button1 "Copy link" '
-							'--button1-action "termux-clipboard-set {0}" '
-							'--button2 "Share" '
-							'--button2-action "termux-share {0}" ').format(url)
+                        subprocess.run(
+							shlex.split((
+								"termux-notification "
+								'--title "File uploaded" '
+								'--content "{0}" '
+								'--button1 "Copy link" '
+								'--button1-action "termux-clipboard-set {0}" '
+								'--button2 "Share" '
+								'--button2-action "termux-share {0}" '
+							).format(url))
 						)
 						
                         print_v("Sent notification")
-                    except:
+                    except FileNotFoundError:
+						# termux-api not installed
                         print("File uploaded: {}, URL: {}".format(
 							file, url))
                 else:
+					# Non-mobile devices
                     print("File uploaded: {}, URL: {}".format(
 						file, url))
 
