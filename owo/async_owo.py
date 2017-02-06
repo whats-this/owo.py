@@ -6,7 +6,7 @@ from .utils import check_size, BASE_URL, MAX_FILES,\
     SHORTEN_STANDARD, UPLOAD_BASES, SHORTEN_BASES
 
 
-@lru_cache()
+@lru_cache(maxsize=None)
 @asyncio.coroutine
 def async_upload_files(key, *files, **kwargs):
     verbose = kwargs.get("verbose", False)
@@ -62,7 +62,7 @@ def async_upload_files(key, *files, **kwargs):
     return results
 
 
-@lru_cache()
+@lru_cache(maxsize=None)
 @asyncio.coroutine
 def async_shorten_urls(key, *urls, **kwargs):
     verbose = kwargs.get("verbose", False)

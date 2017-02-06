@@ -7,7 +7,7 @@ except ImportError:
     # python 2 doesnt have lru_cache
     # Create a dummy wrapper instead
 
-    def lru_cache():
+    def lru_cache(maxsize=None):
         def wrapper(func):
             def inner(*args, **kwargs):
                 return func(*args, **kwargs)
@@ -29,7 +29,7 @@ else:
                "Client"]
 
 
-@lru_cache()
+@lru_cache(maxsize=None)
 def upload_files(key, *files, **kwargs):
     verbose = kwargs.get("verbose", False)
     if len(files) > MAX_FILES:
@@ -79,7 +79,7 @@ def upload_files(key, *files, **kwargs):
     return results
 
 
-@lru_cache()
+@lru_cache(maxsize=None)
 def shorten_urls(key, *urls, **kwargs):
     verbose = kwargs.get("verbose", False)
     try:

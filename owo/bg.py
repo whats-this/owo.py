@@ -11,6 +11,7 @@ import owo
 import os
 import sys
 import time
+import subprocess
 
 
 def print_v(text):
@@ -73,19 +74,24 @@ def main():
                     # Mobile devices
 
                     try:
-                        os.system("termux-notification -t \""
-                                  "File uploaded\""
-                                  " -c \"{0}\" -u \"{0}\"".format(
-                                      url))
-
-                        os.system("termux-clipboard-set {}".format(url))
+						# os.system won't raise an error
+                        subprocess.run((
+							"termux-notification "
+							'--title "File uploaded" '
+                            '--content "{0}" '
+							'--button1 "Copy link" '
+							'--button1-action "termux-clipboard-set {0}" '
+							'--button2 "Share" '
+							'--button2-action "termux-share {0}" ').format(url)
+						)
+						
                         print_v("Sent notification")
                     except:
                         print("File uploaded: {}, URL: {}".format(
-                                  file, url))
+							file, url))
                 else:
                     print("File uploaded: {}, URL: {}".format(
-                              file, url))
+						file, url))
 
 
 if __name__ == "__main__":
