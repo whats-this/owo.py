@@ -6,6 +6,8 @@ main use intended for mobile devices
 usage: `$ owo-bg -p path -k API_KEY`
 """
 
+from __future__ import print_function
+
 import argparse
 import owo
 import os
