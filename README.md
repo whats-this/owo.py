@@ -1,6 +1,6 @@
 # owo.py
 
-A wrapper that was written inside of Python that allows for you to upload images to the owo.whats-th.is and shorten URLs through uwu.whats-th.is. Allows for both methods through Async and Non-Async. Currently only supported inside of Python 3 (3.5+ recommended).
+A wrapper that was written inside of Python that allows for you to upload images to the owo.whats-th.is and shorten URLs through uwu.whats-th.is. Allows for both methods through Async and Non-Async. (Suppports py2)
 
 # Instructions
 
@@ -26,13 +26,14 @@ The program accepts several command-line flags.
 
 ```
 $ owo-bg --help
-usage: bg.py [-h] [-p PATH] -k KEY [-u URL]
+usage: bg.py [-h] [-p PATH] -k KEY [-u URL] [-tts]
 
 optional arguments:
   -h, --help            show this help message and exit
   -p PATH, --path PATH  Path to check file updates
   -k KEY, --key KEY     API Key
   -u URL, --url URL     Base vanity url to use
+  -tts                  Confirm message over tts | Mobile only
 ```
 
 The base url can be any of the owo.whats-th.is vanity urls.
