@@ -35,7 +35,7 @@ parser.add_argument("-v", "--verbose", help="Increase output verbosity",
                     action="store_true")
 
 # Mobile-only args
-parser.add_argument("-tts", help="tts upload notification",
+parser.add_argument("-tts", help=" Confirm message over tts | Mobile only",
                     action="store_true")
 
 args = parser.parse_args()
@@ -108,7 +108,7 @@ def main():
                                 '--button1 "Copy link" '
                                 '--button1-action "termux-clipboard-set {0}" '
                                 '--button2 "Share" '
-                                '--button2-action "termux-share {0}" '
+                                '--button2-action "termux-open-url {0}" '
                             ).format(url))
                         )
 
