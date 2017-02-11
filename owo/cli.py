@@ -20,7 +20,7 @@ def main():
 
     if args.upload:
         res = owo.upload_files(args.key, args.target, verbose=args.verbose)
-        print(res[args.target])
+        print(res[args.target.lower()])
 
     elif args.shorten:
         res = owo.shorten_urls(args.key, args.target, verbose=args.verbose)
