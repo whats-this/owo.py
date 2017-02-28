@@ -1,4 +1,11 @@
 import os.path
+import re
+
+DOMAINS_URL = "https://raw.githubusercontent.com/whats-this/landing/master/public-cdn-domains.txt"
+
+import requests
+resp = requests.get(DOMAINS_URL)
+content = resp.text
 
 MAX_FILES = 3
 
@@ -10,14 +17,9 @@ SHORTEN_PATH = "/shorten/polr"
 UPLOAD_STANDARD = "https://owo.whats-th.is/"
 SHORTEN_STANDARD = "https://uwu.whats-th.is/"
 
-UPLOAD_BASES = ("https://owo.whats-th.is/", "https://i.am-a.ninja/",
-                "https://buttsare.sexy/", "https://nyanyanya.moe/",
-                "https://all.foxgirlsare.sexy/", "https://i.stole-a-me.me/",
-                "https://can-i-ask-dean-on-a.date/", "https://this.is-a.dog/",
-                "https://deanis.sexy/", "https://light-theme-hurts.my-ey.es/",
-                "https://catch-me-outside.how-about-th.at/")
+UPLOAD_BASES = ["https://{}/".format(url) for url in re.findall("files:(.+)", content)]
 
-SHORTEN_BASES = ("https://awau.moe/", "https://uwu.whats-th.is/")
+SHORTEN_BASES = ["https://{}/".format(url) for url in re.findall("link:(.+)", content)]
 
 
 def check_size(file):

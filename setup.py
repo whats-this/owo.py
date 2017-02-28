@@ -9,7 +9,7 @@ with open('README.md') as f:
 setup(
     name='owo',
 
-    version='2.1.0',
+    version='2.2.0',
 
     description='Python API wrapper for api.awau.moe',
     long_description=long_description,
@@ -29,7 +29,9 @@ setup(
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 3.5',
     ],
-    install_requires=[],
+    install_requires=[
+		"requests"
+	],
     packages=find_packages(),
 
     entry_points = {
