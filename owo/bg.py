@@ -108,7 +108,7 @@ def main():
                                 '--button1 "Copy link" '
                                 '--button1-action "termux-clipboard-set {0}" '
                                 '--button2 "Share" '
-                                '--button2-action "termux-open-url {0}" '
+                                '--button2-action "termux-open \"{0}\"" '
                             ).format(url))
                         )
 
