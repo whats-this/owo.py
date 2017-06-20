@@ -4,7 +4,7 @@ import os
 import owo
 
 
-key = os.environ["TRAVIS-KEY"]
+key = os.environ["TRAVIS_KEY"]
 loop = asyncio.get_event_loop()
 
 
