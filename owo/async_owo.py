@@ -2,7 +2,7 @@ import asyncio
 
 from .utils import check_size, BASE_URL, MAX_FILES,\
     UPLOAD_PATH, SHORTEN_PATH, UPLOAD_STANDARD,\
-    SHORTEN_STANDARD, UPLOAD_BASES, SHORTEN_BASES
+    SHORTEN_STANDARD, UPLOAD_BASES, SHORTEN_BASES, headers
 
 
 @asyncio.coroutine
@@ -38,7 +38,8 @@ def async_upload_files(key, *files, **kwargs):
         with aiohttp.ClientSession(loop=loop) as session:
             with (
                 yield from session.post(BASE_URL+UPLOAD_PATH, data=mp,
-                                        params={"key": key})) as response:
+                                        params={"key": key},
+                                        headers=headers)) as response:
                 if response.status != 200:
                     raise ValueError("Expected 200, got {}\n{}".format(
                         response.status, (yield from response.text())))
@@ -78,7 +79,8 @@ def async_shorten_urls(key, *urls, **kwargs):
                 yield from session.get(BASE_URL+SHORTEN_PATH,
                                        params={"action": "shorten",
                                                "url": url,
-                                               "key": key})) as response:
+                                               "key": key},
+                                       headers=headers)) as response:
                 if response.status != 200:
                     raise ValueError("Expected 200, got {}\n{}".format(
                         response.status, (yield from response.text())))

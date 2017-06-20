@@ -1,6 +1,8 @@
 from setuptools import setup, find_packages
 from os import path
 
+from owo.utils import version
+
 here = path.abspath(path.dirname(__file__))
 
 with open('README.md') as f:
@@ -9,7 +11,7 @@ with open('README.md') as f:
 setup(
     name='owo',
 
-    version='2.2.2',
+    version=version,
 
     description='Python API wrapper for api.awau.moe',
     long_description=long_description,

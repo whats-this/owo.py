@@ -18,7 +18,7 @@ except ImportError:
 
 from .utils import check_size, BASE_URL, MAX_FILES,\
     UPLOAD_PATH, SHORTEN_PATH, UPLOAD_STANDARD,\
-    SHORTEN_STANDARD, UPLOAD_BASES, SHORTEN_BASES
+    SHORTEN_STANDARD, UPLOAD_BASES, SHORTEN_BASES, headers
 
 PY_VERSION = sys.version_info.major
 
@@ -54,7 +54,8 @@ def upload_files(key, *files, **kwargs):
         ) for file in files]
 
     response = requests.post(BASE_URL+UPLOAD_PATH, files=multipart,
-                             params={"key": key})
+                             params={"key": key},
+                             headers=headers)
 
     if response.status_code != 200:
         raise ValueError("Expected 200, got {}\n{}".format(
@@ -94,7 +95,8 @@ def shorten_urls(key, *urls, **kwargs):
         response = requests.get(BASE_URL+SHORTEN_PATH,
                                 params={"action": "shorten",
                                         "url": url,
-                                        "key": key})
+                                        "key": key},
+                                headers=headers)
 
         if response.status_code != 200:
             raise ValueError("Expected 200, got {}\n{}".format(

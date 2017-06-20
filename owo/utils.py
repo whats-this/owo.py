@@ -8,6 +8,12 @@ DOMAINS_URL = ("https://raw.githubusercontent.com/whats-this/landing/"
 resp = requests.get(DOMAINS_URL)
 content = resp.text
 
+version = "2.3.0"
+
+headers = {
+    "User-Agent": ("WhatsThisClient (https://github.com/whats-this/owo.py,"
+                   f" {version}),")}
+
 MAX_FILES = 3
 
 BASE_URL = "https://api.awau.moe"
