@@ -9,12 +9,13 @@ usage: `$ owo-bg -p path -k API_KEY`
 from __future__ import print_function
 
 import argparse
-import owo
 import os
 import sys
-import time
 import shlex
 import subprocess
+import time
+
+import owo
 
 
 def print_v(text):
@@ -75,7 +76,7 @@ def main():
                         os.system('termux-tts-speak "Upload failed"')
                     else:
                         os.system('termux-toast "Upload failed"')
-                except:
+                except FileNotFoundError:
                     pass
 
             except OverflowError:
@@ -87,7 +88,7 @@ def main():
                         os.system('termux-tts-speak "Upload too big"')
                     else:
                         os.system('termux-toast "Upload too big"')
-                except:
+                except FileNotFoundError:
                     pass
                 sent_files.append(file)
 

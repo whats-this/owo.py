@@ -1,9 +1,10 @@
 import os.path
 import re
-
-DOMAINS_URL = "https://raw.githubusercontent.com/whats-this/landing/master/public-cdn-domains.txt"
-
 import requests
+
+DOMAINS_URL = ("https://raw.githubusercontent.com/whats-this/landing/"
+               "master/public-cdn-domains.txt")
+
 resp = requests.get(DOMAINS_URL)
 content = resp.text
 
@@ -17,9 +18,11 @@ SHORTEN_PATH = "/shorten/polr"
 UPLOAD_STANDARD = "https://owo.whats-th.is/"
 SHORTEN_STANDARD = "https://uwu.whats-th.is/"
 
-UPLOAD_BASES = ["https://{}/".format(url) for url in re.findall("files:(.+)", content)]
+UPLOAD_BASES = ["https://{}/".format(url) for url in re.findall("files:(.+)",
+                                                                content)]
 
-SHORTEN_BASES = ["https://{}/".format(url) for url in re.findall("link:(.+)", content)]
+SHORTEN_BASES = ["https://{}/".format(url) for url in re.findall("link:(.+)",
+                                                                 content)]
 
 
 def check_size(file):

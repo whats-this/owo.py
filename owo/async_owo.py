@@ -1,10 +1,8 @@
 import asyncio
-from functools import lru_cache
 
 from .utils import check_size, BASE_URL, MAX_FILES,\
     UPLOAD_PATH, SHORTEN_PATH, UPLOAD_STANDARD,\
     SHORTEN_STANDARD, UPLOAD_BASES, SHORTEN_BASES
-
 
 
 @asyncio.coroutine
@@ -60,7 +58,6 @@ def async_upload_files(key, *files, **kwargs):
                         results[item["name"]] = UPLOAD_STANDARD+item["url"]
 
     return results
-
 
 
 @asyncio.coroutine

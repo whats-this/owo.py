@@ -8,6 +8,8 @@ except ImportError:
     # Create a dummy wrapper instead
 
     def lru_cache(maxsize=None):
+        del maxsize
+
         def wrapper(func):
             def inner(*args, **kwargs):
                 return func(*args, **kwargs)
@@ -47,12 +49,9 @@ def upload_files(key, *files, **kwargs):
 
     multipart = [(
         "files[]",
-        (
-            file.lower(),
-            open(file, "rb"),
-            mimetypes.guess_type(file)[0]
-        ))
-        for file in files]
+        (file.lower(), open(file, "rb"),
+         mimetypes.guess_type(file)[0])
+        ) for file in files]
 
     response = requests.post(BASE_URL+UPLOAD_PATH, files=multipart,
                              params={"key": key})

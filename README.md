@@ -1,4 +1,5 @@
 # owo.py
+![](https://travis-ci.org/whats-this/owo.py.svg?branch=master)
 
 A wrapper that was written inside of Python that allows for you to upload images to the owo.whats-th.is and shorten URLs through uwu.whats-th.is. Allows for both methods through Async and Non-Async. (Suppports py2)
 
