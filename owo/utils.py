@@ -24,11 +24,11 @@ SHORTEN_PATH = "/shorten/polr"
 UPLOAD_STANDARD = "https://owo.whats-th.is/"
 SHORTEN_STANDARD = "https://uwu.whats-th.is/"
 
-UPLOAD_BASES = ["https://{}/".format(url) for url in re.findall("files:(.+)",
-                                                                content)]
+UPLOAD_BASES = ["https://{}/".format(url.split(":")[-1]) for url in 
+                content.split("\n")
+                if "#" not in url]
 
-SHORTEN_BASES = ["https://{}/".format(url) for url in re.findall("link:(.+)",
-                                                                 content)]
+SHORTEN_BASES = UPLOAD_BASES
 
 
 def check_size(file):
