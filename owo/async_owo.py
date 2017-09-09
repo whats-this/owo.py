@@ -35,28 +35,27 @@ def async_upload_files(key, *files, **kwargs):
                 filename=file.lower()
             )
 
-        with aiohttp.ClientSession(loop=loop) as session:
-            with (
-                yield from session.post(BASE_URL+UPLOAD_PATH, data=mp,
-                                        params={"key": key},
-                                        headers=headers)) as response:
-                if response.status != 200:
-                    raise ValueError("Expected 200, got {}\n{}".format(
-                        response.status, (yield from response.text())))
+        session = aiohttp.ClientSession(loop=loop)
+        response = yield from session.post(BASE_URL+UPLOAD_PATH, data=mp,
+                                           params={"key": key},
+                                           headers=headers)
+        if response.status != 200:
+            raise ValueError("Expected 200, got {}\n{}".format(
+                response.status, (yield from response.text())))
 
-                for item in (yield from response.json())["files"]:
-                    if item.get("error") is True:
-                        raise ValueError("Expected 200, got {}\n{}".format(
-                            item["errorcode"], item["description"]))
+        for item in (yield from response.json())["files"]:
+            if item.get("error") is True:
+                raise ValueError("Expected 200, got {}\n{}".format(
+                    item["errorcode"], item["description"]))
 
-                    if verbose:
-                        results[item["name"]] = {
-                            base: base+item["url"]
-                            for base in UPLOAD_BASES
-                        }
+            if verbose:
+                results[item["name"]] = {
+                    base: base+item["url"]
+                    for base in UPLOAD_BASES
+                }
 
-                    else:
-                        results[item["name"]] = UPLOAD_STANDARD+item["url"]
+            else:
+                results[item["name"]] = UPLOAD_STANDARD+item["url"]
 
     return results
 
@@ -73,26 +72,25 @@ def async_shorten_urls(key, *urls, **kwargs):
 
     results = []
 
-    with aiohttp.ClientSession(loop=loop) as session:
-        for url in urls:
-            with (
-                yield from session.get(BASE_URL+SHORTEN_PATH,
-                                       params={"action": "shorten",
-                                               "url": url,
-                                               "key": key},
-                                       headers=headers)) as response:
-                if response.status != 200:
-                    raise ValueError("Expected 200, got {}\n{}".format(
-                        response.status, (yield from response.text())))
+    session = aiohttp.ClientSession(loop=loop)
+    for url in urls:
+        response = yield from session.get(BASE_URL+SHORTEN_PATH,
+                                          params={"action": "shorten",
+                                                  "url": url,
+                                                  "key": key},
+                                          headers=headers)
+        if response.status != 200:
+            raise ValueError("Expected 200, got {}\n{}".format(
+                response.status, (yield from response.text())))
 
-            path = (yield from response.text()).split("/")[-1]
-            if verbose:
-                results.append({
-                    base: base+path
-                    for base in SHORTEN_BASES
-                })
-            else:
-                results.append(SHORTEN_STANDARD + path)
+        path = (yield from response.text()).split("/")[-1]
+        if verbose:
+            results.append({
+                base: base+path
+                for base in SHORTEN_BASES
+            })
+        else:
+            results.append(SHORTEN_STANDARD + path)
 
     return results
 
