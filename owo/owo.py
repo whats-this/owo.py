@@ -47,7 +47,7 @@ def upload_files(key, *files, **kwargs):
                           "to use this function")
 
     for file in files:
-        if not isinstance(file, str) and not (hasattr(file, 'data') or
+        if not isinstance(file, str) and not (hasattr(file, 'data') and
                                               hasattr(file, 'name')):
             raise ValueError("`file` should be an object with the "
                              "properties `data` (bytes/BytesIO) and "
