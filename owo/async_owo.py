@@ -1,4 +1,5 @@
 import asyncio
+import os.path as osp
 
 from .utils import check_size, BASE_URL, MAX_FILES,\
     UPLOAD_PATH, SHORTEN_PATH, UPLOAD_STANDARD,\
@@ -14,7 +15,6 @@ def async_upload_files(key, *files, **kwargs):
                             "is {}".format(MAX_FILES))
 
     try:
-        from . import aiohttp2
         import aiohttp
     except ImportError:
         raise ImportError("Please install the `aiohttp` module "
@@ -25,14 +25,14 @@ def async_upload_files(key, *files, **kwargs):
     for file in files:
         check_size(file)
 
-    with aiohttp2.MultipartWriter('form-data') as mp:
+    with aiohttp.MultipartWriter('form-data') as mp:
         for file in files:
             part = mp.append(open(file, "rb"))
             part.set_content_disposition(
                 'form-data',
-                should_quote=False,
+                quote_fields=False,
                 name='files[]',
-                filename=file.lower()
+                filename=osp.basename(file).lower()  # Errors without basename
             )
 
         session = aiohttp.ClientSession(loop=loop)
