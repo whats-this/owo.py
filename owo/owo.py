@@ -18,22 +18,24 @@ except ImportError:
 
 from .utils import check_size, BASE_URL, MAX_FILES,\
     UPLOAD_PATH, SHORTEN_PATH, UPLOAD_STANDARD,\
-    SHORTEN_STANDARD, UPLOAD_BASES, SHORTEN_BASES, headers
+    SHORTEN_STANDARD, UPLOAD_BASES, SHORTEN_BASES, headers,\
+    File
 
 PY_VERSION = sys.version_info.major
 
 if PY_VERSION == 3:
     __all__ = ["upload_files", "shorten_urls",
                "async_upload_files", "async_shorten_urls",
-               "Client"]
+               "Client", "File"]
 else:
     __all__ = ["upload_files", "shorten_urls",
-               "Client"]
+               "Client", "File"]
 
 
 @lru_cache(maxsize=None)
 def upload_files(key, *files, **kwargs):
     verbose = kwargs.get("verbose", False)
+
     if len(files) > MAX_FILES:
         raise OverflowError("Maximum amout of files to send at once"
                             "is {}".format(MAX_FILES))
@@ -45,13 +47,25 @@ def upload_files(key, *files, **kwargs):
                           "to use this function")
 
     for file in files:
+        if not isinstance(file, str) and not (hasattr(file, 'data') or
+                                              hasattr(file, 'name')):
+            raise ValueError("`file` should be an object with the "
+                             "properties `data` (bytes/BytesIO) and "
+                             "`name` (str), or a string.")
+
         check_size(file)
 
-    multipart = [(
-        "files[]",
-        (file.lower(), open(file, "rb"),
-         mimetypes.guess_type(file)[0])
-        ) for file in files]
+    multipart = []
+
+    for file in files:
+        if isinstance(file, str):
+            multipart.append(("files[]",
+                             (file.lower(), open(file, "rb"),
+                              mimetypes.guess_type(file)[0])))
+        else:
+            multipart.append(("files[]",
+                             (file.name.lower(), file.data,
+                              mimetypes.guess_type(file.name)[0])))
 
     response = requests.post(BASE_URL+UPLOAD_PATH, files=multipart,
                              params={"key": key},
@@ -82,6 +96,7 @@ def upload_files(key, *files, **kwargs):
 @lru_cache(maxsize=None)
 def shorten_urls(key, *urls, **kwargs):
     verbose = kwargs.get("verbose", False)
+
     try:
         import requests
     except ImportError:

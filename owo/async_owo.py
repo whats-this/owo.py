@@ -1,4 +1,5 @@
 import asyncio
+import mimetypes
 import os.path as osp
 
 from .utils import check_size, BASE_URL, MAX_FILES,\
@@ -10,6 +11,7 @@ from .utils import check_size, BASE_URL, MAX_FILES,\
 def async_upload_files(key, *files, **kwargs):
     verbose = kwargs.get("verbose", False)
     loop = kwargs.get("loop", None)
+
     if len(files) > MAX_FILES:
         raise OverflowError("Maximum amout of files to send at once"
                             "is {}".format(MAX_FILES))
@@ -23,16 +25,33 @@ def async_upload_files(key, *files, **kwargs):
     results = {}
 
     for file in files:
+        if not isinstance(file, str) and not (hasattr(file, 'data') or
+                                              hasattr(file, 'name')):
+            raise ValueError("`file` should be an object with the "
+                             "properties `data` (bytes/BytesIO) and "
+                             "`name` (str), or a string.")
+
         check_size(file)
 
     with aiohttp.MultipartWriter('form-data') as mp:
         for file in files:
-            part = mp.append(open(file, "rb"))
+            if isinstance(file, str):
+                # If string, read file
+                data = open(file, "rb")
+                name = file
+            else:
+                # Otherwise treat it a an object with `data` and `name` props.
+                data = file.data
+                name = file.name
+
+            part = mp.append(data, {'Content-Type':
+                                    mimetypes.guess_type(name)[0] or
+                                    'application/octet-stream'})
             part.set_content_disposition(
                 'form-data',
                 quote_fields=False,
                 name='files[]',
-                filename=osp.basename(file).lower()  # Errors without basename
+                filename=osp.basename(name).lower()  # Errors without basename
             )
 
         session = aiohttp.ClientSession(loop=loop)
@@ -64,6 +83,7 @@ def async_upload_files(key, *files, **kwargs):
 def async_shorten_urls(key, *urls, **kwargs):
     verbose = kwargs.get("verbose", False)
     loop = kwargs.get("loop", None)
+
     try:
         import aiohttp
     except ImportError:
