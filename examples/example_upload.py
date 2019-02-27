@@ -76,3 +76,20 @@ False
 {"file.png": "url", "file.py": "url"}
 
 # ############################################################
+
+# IN-MEMORY EXAMPLES
+
+# You can also pass `upload_files` and `async_upload_files` an object that has
+# `data` and `name` properties instead of a filepath. `owo.File` is a
+# namedtuple which has these.
+
+>>> import io
+
+>>> owo.upload_files(API_KEY, owo.File(open("./file", "rb"), "myfile.png"))
+>>> loop.run_until_complete(
+...     owo.async_upload_files(API_KEY, owo.File(io.BytesIO(b"file data")
+...                                              "myfile.png"), loop=loop))
+...
+
+# `data` for files should either be a bytes-like or file-like object
+# e.g. `bytes`, `BytesIO`, file from `open`.
