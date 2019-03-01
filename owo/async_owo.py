@@ -1,4 +1,5 @@
 import asyncio
+import io
 import mimetypes
 import os.path as osp
 
@@ -25,24 +26,23 @@ def async_upload_files(key, *files, **kwargs):
     results = {}
 
     for file in files:
-        if not isinstance(file, str) and not (hasattr(file, 'data') and
-                                              hasattr(file, 'name')):
-            raise ValueError("`file` should be an object with the "
-                             "properties `data` (bytes/BytesIO) and "
-                             "`name` (str), or a string.")
+        if not isinstance(file, (str, bytes, io.IOBase)):
+            raise ValueError("`file` should either be a `str`, `bytes` or an"
+                             "inheritee of `io.IOBase` (open(), BytesIO,"
+                             "etc.).")
 
         check_size(file)
 
     with aiohttp.MultipartWriter('form-data') as mp:
-        for file in files:
+        for i, file in enumerate(files):
             if isinstance(file, str):
                 # If string, read file
                 data = open(file, "rb")
                 name = file
             else:
                 # Otherwise treat it a an object with `data` and `name` props.
-                data = file.data
-                name = file.name
+                data = file
+                name = getattr(file, "name", "file_{}".format(i))
 
             part = mp.append(data, {'Content-Type':
                                     mimetypes.guess_type(name)[0] or

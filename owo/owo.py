@@ -1,3 +1,4 @@
+import io
 import mimetypes
 import sys
 
@@ -47,25 +48,25 @@ def upload_files(key, *files, **kwargs):
                           "to use this function")
 
     for file in files:
-        if not isinstance(file, str) and not (hasattr(file, 'data') and
-                                              hasattr(file, 'name')):
-            raise ValueError("`file` should be an object with the "
-                             "properties `data` (bytes/BytesIO) and "
-                             "`name` (str), or a string.")
+        if not isinstance(file, (str, bytes, io.IOBase)):
+            raise ValueError("`file` should either be a `str`, `bytes` or an"
+                             "inheritee of `io.IOBase` (open(), BytesIO,"
+                             "etc.).")
 
         check_size(file)
 
     multipart = []
 
-    for file in files:
+    for i, file in enumerate(files):
         if isinstance(file, str):
             multipart.append(("files[]",
                              (file.lower(), open(file, "rb"),
                               mimetypes.guess_type(file)[0])))
         else:
+            name = getattr(file, "name", "file_{}".format(i))
             multipart.append(("files[]",
-                             (file.name.lower(), file.data,
-                              mimetypes.guess_type(file.name)[0])))
+                             (name.lower(), file,
+                              mimetypes.guess_type(name)[0])))
 
     response = requests.post(BASE_URL+UPLOAD_PATH, files=multipart,
                              params={"key": key},

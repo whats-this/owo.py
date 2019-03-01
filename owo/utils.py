@@ -1,4 +1,3 @@
-from collections import namedtuple
 import os
 import os.path
 
@@ -14,9 +13,7 @@ version = "2.3.0"
 
 headers = {
     "User-Agent": ("WhatsThisClient (https://github.com/whats-this/owo.py,"
-                   f" {version}),")}
-
-File = namedtuple("File", ["data", "name"])
+                   " {}),".format(version))}
 
 MAX_FILES = 3
 MAX_SIZE = 83889080
@@ -39,17 +36,16 @@ SHORTEN_BASES = UPLOAD_BASES
 def check_size(file):
     if isinstance(file, str):
         check = os.path.getsize(file) > MAX_SIZE
-    elif isinstance(file.data, bytes):
-        check = len(file.data) > MAX_SIZE
+    elif isinstance(file, bytes):
+        check = len(file) > MAX_SIZE
     else:
         # Should work for just about any file-like object (`open`, BytesIO, etc)
         # without consuming it.
-        f = file.data
-        old_pos = f.tell()
+        old_pos = file.tell()
 
-        f.seek(0, os.SEEK_END)
-        size = f.tell()
-        f.seek(old_pos, os.SEEK_SET)
+        file.seek(0, os.SEEK_END)
+        size = file.tell()
+        file.seek(old_pos, os.SEEK_SET)
 
         check = size > MAX_SIZE
 
