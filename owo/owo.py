@@ -19,8 +19,7 @@ except ImportError:
 
 from .utils import check_size, BASE_URL, MAX_FILES,\
     UPLOAD_PATH, SHORTEN_PATH, UPLOAD_STANDARD,\
-    SHORTEN_STANDARD, UPLOAD_BASES, SHORTEN_BASES, headers,\
-    File
+    SHORTEN_STANDARD, UPLOAD_BASES, SHORTEN_BASES, headers
 
 PY_VERSION = sys.version_info.major
 

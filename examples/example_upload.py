@@ -85,10 +85,9 @@ False
 
 >>> import io
 
->>> owo.upload_files(API_KEY, owo.File(open("./file", "rb"), "myfile.png"))
+>>> owo.upload_files(API_KEY, open("./file", "rb"))
 >>> loop.run_until_complete(
-...     owo.async_upload_files(API_KEY, owo.File(io.BytesIO(b"file data")
-...                                              "myfile.png"), loop=loop))
+...     owo.async_upload_files(API_KEY, io.BytesIO(b"file data"), loop=loop))
 ...
 
 # `data` for files should either be a bytes-like or file-like object

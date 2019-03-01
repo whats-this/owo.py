@@ -59,12 +59,11 @@ print(res2)
 loop = asyncio.get_event_loop()
 f = open("./example.png", "rb")
 
-res = loop.run_until_complete(owo.async_upload_files(key, owo.File(f,
-                                                          "owologo.png")))
-res2 = loop.run_until_complete(owo.async_upload_files(key, owo.File(BytesIO(
-                                                           b"this is my very "
-                                                           b"cool file",
-                                                           "file.txt"))))
+res = loop.run_until_complete(owo.async_upload_files(key, f))
+res2 = loop.run_until_complete(owo.async_upload_files(key, BytesIO(b"this is"
+                                                                   b"my very "
+                                                                   b"cool file"
+                                                                  )))
 
 print(res)
 print(res2)
