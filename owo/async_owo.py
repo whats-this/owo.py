@@ -28,7 +28,7 @@ def async_upload_files(key, *files, **kwargs):
     for file in files:
         if not isinstance(file, (str, bytes, io.IOBase)):
             raise ValueError("`file` should either be a `str`, `bytes` or an"
-                             "inheritee of `io.IOBase` (open(), BytesIO,"
+                             "inheriter of `io.IOBase` (open(), BytesIO,"
                              "etc.).")
 
         check_size(file)
@@ -40,9 +40,14 @@ def async_upload_files(key, *files, **kwargs):
                 data = open(file, "rb")
                 name = file
             else:
-                # Otherwise treat it a an object with `data` and `name` props.
                 data = file
                 name = getattr(file, "name", "file_{}".format(i))
+
+            # Get only the filename, with no path.
+            # Without this, attempting to upload files like `./foo.ext`
+            # (with any path stuff, `./`, `dir/`, etc) will result in an
+            # annoying error saying that there were no `files[]`.
+            name = osp.basename(name).lower()
 
             part = mp.append(data, {'Content-Type':
                                     mimetypes.guess_type(name)[0] or
@@ -51,7 +56,7 @@ def async_upload_files(key, *files, **kwargs):
                 'form-data',
                 quote_fields=False,
                 name='files[]',
-                filename=osp.basename(name).lower()  # Errors without basename
+                filename=name
             )
 
         session = aiohttp.ClientSession(loop=loop)

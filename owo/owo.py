@@ -1,5 +1,6 @@
 import io
 import mimetypes
+import os.path as osp
 import sys
 
 try:
@@ -49,7 +50,7 @@ def upload_files(key, *files, **kwargs):
     for file in files:
         if not isinstance(file, (str, bytes, io.IOBase)):
             raise ValueError("`file` should either be a `str`, `bytes` or an"
-                             "inheritee of `io.IOBase` (open(), BytesIO,"
+                             "inheriter of `io.IOBase` (open(), BytesIO,"
                              "etc.).")
 
         check_size(file)
@@ -58,13 +59,16 @@ def upload_files(key, *files, **kwargs):
 
     for i, file in enumerate(files):
         if isinstance(file, str):
+            # Get only the filename, with no path.
+            name = osp.basename(file).lower()
             multipart.append(("files[]",
-                             (file.lower(), open(file, "rb"),
+                             (name, open(file, "rb"),
                               mimetypes.guess_type(file)[0])))
         else:
             name = getattr(file, "name", "file_{}".format(i))
+            name = osp.basename(name).lower()
             multipart.append(("files[]",
-                             (name.lower(), file,
+                             (name, file,
                               mimetypes.guess_type(name)[0])))
 
     response = requests.post(BASE_URL+UPLOAD_PATH, files=multipart,
