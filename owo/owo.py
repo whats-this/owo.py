@@ -27,10 +27,10 @@ PY_VERSION = sys.version_info.major
 if PY_VERSION == 3:
     __all__ = ["upload_files", "shorten_urls",
                "async_upload_files", "async_shorten_urls",
-               "Client", "File"]
+               "Client"]
 else:
     __all__ = ["upload_files", "shorten_urls",
-               "Client", "File"]
+               "Client"]
 
 
 @lru_cache(maxsize=None)
