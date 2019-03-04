@@ -1,4 +1,6 @@
+import io
 import mimetypes
+import os.path as osp
 import sys
 
 try:
@@ -34,6 +36,7 @@ else:
 @lru_cache(maxsize=None)
 def upload_files(key, *files, **kwargs):
     verbose = kwargs.get("verbose", False)
+
     if len(files) > MAX_FILES:
         raise OverflowError("Maximum amout of files to send at once"
                             "is {}".format(MAX_FILES))
@@ -45,13 +48,28 @@ def upload_files(key, *files, **kwargs):
                           "to use this function")
 
     for file in files:
+        if not isinstance(file, (str, bytes, io.IOBase)):
+            raise ValueError("`file` should either be a `str`, `bytes` or an"
+                             "inheriter of `io.IOBase` (open(), BytesIO,"
+                             "etc.).")
+
         check_size(file)
 
-    multipart = [(
-        "files[]",
-        (file.lower(), open(file, "rb"),
-         mimetypes.guess_type(file)[0])
-        ) for file in files]
+    multipart = []
+
+    for i, file in enumerate(files):
+        if isinstance(file, str):
+            # Get only the filename, with no path.
+            name = osp.basename(file).lower()
+            multipart.append(("files[]",
+                             (name, open(file, "rb"),
+                              mimetypes.guess_type(file)[0])))
+        else:
+            name = getattr(file, "name", "file_{}".format(i))
+            name = osp.basename(name).lower()
+            multipart.append(("files[]",
+                             (name, file,
+                              mimetypes.guess_type(name)[0])))
 
     response = requests.post(BASE_URL+UPLOAD_PATH, files=multipart,
                              params={"key": key},
@@ -82,6 +100,7 @@ def upload_files(key, *files, **kwargs):
 @lru_cache(maxsize=None)
 def shorten_urls(key, *urls, **kwargs):
     verbose = kwargs.get("verbose", False)
+
     try:
         import requests
     except ImportError:
