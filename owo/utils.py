@@ -9,7 +9,7 @@ try:
     import requests
 except ImportError:
     # Installing package, ignore
-    pass
+    UPLOAD_BASES = SHORTEN_BASES = []
 else:
     resp = requests.get(DOMAINS_URL)
     content = resp.text
