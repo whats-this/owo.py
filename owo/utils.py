@@ -1,15 +1,23 @@
 import os
 import os.path
 
-import requests
-
+version = "2.3.0"
 DOMAINS_URL = ("https://raw.githubusercontent.com/whats-this/landing/"
                "master/public-cdn-domains.txt")
 
-resp = requests.get(DOMAINS_URL)
-content = resp.text
+try:
+    import requests
+except ImportError:
+    # Installing package, ignore
+    pass
+else:
+    resp = requests.get(DOMAINS_URL)
+    content = resp.text
+    UPLOAD_BASES = ["https://{}/".format(url.split(":")[-1]) for url in
+                    content.split("\n")
+                    if "#" not in url]
 
-version = "2.3.0"
+SHORTEN_BASES = UPLOAD_BASES
 
 headers = {
     "User-Agent": ("WhatsThisClient (https://github.com/whats-this/owo.py,"
@@ -25,12 +33,6 @@ SHORTEN_PATH = "/shorten/polr"
 
 UPLOAD_STANDARD = "https://owo.whats-th.is/"
 SHORTEN_STANDARD = "https://uwu.whats-th.is/"
-
-UPLOAD_BASES = ["https://{}/".format(url.split(":")[-1]) for url in
-                content.split("\n")
-                if "#" not in url]
-
-SHORTEN_BASES = UPLOAD_BASES
 
 
 def check_size(file):
