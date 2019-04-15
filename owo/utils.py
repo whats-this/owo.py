@@ -17,7 +17,7 @@ else:
                     content.split("\n")
                     if "#" not in url]
 
-SHORTEN_BASES = UPLOAD_BASES
+    SHORTEN_BASES = UPLOAD_BASES
 
 headers = {
     "User-Agent": ("WhatsThisClient (https://github.com/whats-this/owo.py,"
